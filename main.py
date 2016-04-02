@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys
 import Spider
+import IO
 
 
 
@@ -9,7 +10,8 @@ import Spider
 
 
 def main():
-    spider = Spider.Spider()
+    io = IO.IO()
+    spider = Spider.Spider(io)
     spider.start()
 
     pass

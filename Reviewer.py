@@ -1,12 +1,12 @@
-import IO
+
 #域名名单检查器
 class Reviewer:
     __domainCount = 0
     __domainNumber = 0
 
-    def __init__(self):
+    def __init__(self,ioMethod):
         self.__domainNumer = self.__getDomainNumber()
-        self.__io = IO.IO.getIO()
+        self.__io = ioMethod
 
     def __del__(self):
         #记得保存当前检查位置
