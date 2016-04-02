@@ -4,6 +4,8 @@ import certifi
 import re
 import subprocess
 import shlex
+import codecs
+import chardet
 
 
 
@@ -18,12 +20,26 @@ class Spider:
         self.__domainRex = re.compile(r'http(s)?://([\w\-\_]+\.[\w\.\-\_]+)[\/\*]*')
         self.__cnDomainRex = re.compile(r'\.cn(/)?$')
         self.__topDomainRex = re.compile(r'\w+\.\w+$')
+        self.__getLastTimeList()
 
         # self.__domainSeeds = self.__getSeeds()
 
+    def __del__(self):
+        f = codecs.open('./domainlist.txt','w','utf-8')
+        for domian in self.__domainList:
+            f.write(domian + '\n')
+        f.close()
 
+    def __getLastTimeList(self):
+        # try:
+            f = codecs.open('./domainlist.txt', 'r','utf-8')
+            for line in f.readlines():
+                line = line.strip('\n')
+                self.__domainList.append(line)
+            f.close()
 
-
+        # except:
+        #     pass
 
 #以一个域名数组为种子开始爬
     def start(self):
@@ -55,7 +71,12 @@ class Spider:
     def __gatherDomainFromPage(self,page):
         if len(self.__domainList) > 5000:
             return
-        m = self.__domainRex.findall(page)
+        try:
+            m = self.__domainRex.findall(page)
+        except:
+            print('Get wrong data! skip it!')
+            return
+
         domainList = []
         if m:
             for domain in m:
@@ -84,8 +105,13 @@ class Spider:
             cert_reqs='CERT_REQUIRED',  # Force certificate check.
             ca_certs=certifi.where(),  # Path to the Certifi bundle.
         )
-
-        data = http.request('GET', url, timeout=10).data.decode('utf-8')
+        data = ''
+        try:
+            data = http.request('GET', url, timeout=10).data
+            codeType = chardet.detect(data)
+            data = data.decode(codeType['encoding'])
+        except:
+            print('Get url:'+url+' error! ----Maby page encoding detect wrong')
         return data
 
     def __pingDomain(self,domain):
