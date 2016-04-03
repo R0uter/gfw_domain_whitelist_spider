@@ -14,12 +14,12 @@ class IO:
         passwd = 'toor'
         db = 'whitelist'
 
-        # 获取一个数据库连接
+
         self.conn = pymysql.connect(host=host, user=user, passwd=passwd, db=db, port=3306, charset='utf8')
 
     def __del__(self):
 
-        self.conn.close()  # 释放数据库资源
+        self.conn.close()
 
 
     def saveDomain(self,domain):

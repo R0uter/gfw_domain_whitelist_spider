@@ -1,4 +1,3 @@
-import Reviewer
 import urllib3
 import certifi
 import re
@@ -6,10 +5,11 @@ import subprocess
 import shlex
 import codecs
 import chardet
+import threading
 
 
 
-#爬虫类
+
 class Spider:
     __domainList = []
     __whiteList = []
@@ -21,6 +21,7 @@ class Spider:
         self.__cnDomainRex = re.compile(r'\.cn(/)?$')
         self.__topDomainRex = re.compile(r'\w+\.\w+$')
         self.__getLastTimeList()
+        self.__lock = threading.Lock()
 
         # self.__domainSeeds = self.__getSeeds()
 
@@ -41,32 +42,43 @@ class Spider:
         except:
             pass
 
-#以一个域名数组为种子开始爬
+
     def start(self):
-        i = 0
-        while i < 15:
-            self.__nextPage()
-            i = i+1
-#准备种子,如果是第一次启动则使用字面量启动
+
+
+        while True:
+            threads = []
+
+
+            for thread in range(10):
+                threads.append(threading.Thread(target=self.__nextPage))
+            for thread in threads:
+                thread.start()
+            for thread in threads:
+                thread.join()
+            print('Process next 10 pages...')
+
+
+
     def __getSeeds(self):
         return ['www.hao123.com']
-    #获取链接列表里的下一个页面
+
     def __nextPage(self):
         if len(self.__domainList) == 0:
             self.__domainList = self.__getSeeds()
             print(self.__domainList)
 
+        self.__lock.acquire()
         url = self.__domainList.pop(0)
+        self.__lock.release()
+
         if self.__pingDomain(url):
             pageContent = self.__getPage(url)
             topDomain = self.__topDomainRex.findall(url)
-
+            self.__lock.acquire()
             self.__io.saveDomain(topDomain[0])
+            self.__lock.release()
             self.__gatherDomainFromPage(pageContent)
-
-
-
-
 
     def __gatherDomainFromPage(self,page):
         if len(self.__domainList) > 5000:
@@ -83,8 +95,9 @@ class Spider:
                 domainList.append(domain[1])
         domainList = self.__deDuplicate(domainList)
         domainList = self.__checkDomainFromList(domainList)
+        self.__lock.acquire()
         self.__domainList += domainList
-
+        self.__lock.release()
 
 
     def __checkDomainFromList(self,list):
@@ -111,7 +124,8 @@ class Spider:
             codeType = chardet.detect(data)
             data = data.decode(codeType['encoding'])
         except:
-            print('Get url:'+url+' error! ----Maby page encoding detect wrong')
+            pass
+            #print('Get url: '+url+' error! ----Maby page encoding detect wrong')
         return data
 
     def __pingDomain(self,domain):
