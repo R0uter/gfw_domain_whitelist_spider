@@ -5,18 +5,10 @@ import Spider
 import IO
 
 
-
-
-
-
 def main():
     io = IO.IO()
     spider = Spider.Spider(io)
     spider.start()
-
-    pass
-
-
 
 
 

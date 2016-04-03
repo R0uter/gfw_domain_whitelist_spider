@@ -31,15 +31,15 @@ class Spider:
         f.close()
 
     def __getLastTimeList(self):
-        # try:
+        try:
             f = codecs.open('./domainlist.txt', 'r','utf-8')
             for line in f.readlines():
                 line = line.strip('\n')
                 self.__domainList.append(line)
             f.close()
 
-        # except:
-        #     pass
+        except:
+            pass
 
 #以一个域名数组为种子开始爬
     def start(self):

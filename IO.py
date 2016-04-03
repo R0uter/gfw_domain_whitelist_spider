@@ -1,13 +1,46 @@
+import pymysql
+import datetime
 
 class IO:
 
+    __DomainRank = 0
+    __Domain = 1
+    __LastUpdate = 2
+
 
     def __init__(self):
-        pass
-    #一个单件模式,确保全局只有一个IO对象
-    #有错误，得改改。
+        host = '10.211.55.14'
+        user = 'python'
+        passwd = 'toor'
+        db = 'whitelist'
+
+        # 获取一个数据库连接
+        self.conn = pymysql.connect(host=host, user=user, passwd=passwd, db=db, port=3306, charset='utf8')
+
+    def __del__(self):
+
+        self.conn.close()  # 释放数据库资源
+
+
     def saveDomain(self,domain):
-        print("get white domian!" + domain)
+        self.__updateDomain(domain)
+
+
+
+    def __updateDomain(self,domain):
+        cur = self.conn.cursor()
+        cur.execute('select * from WhiteList where Domain=%s',domain)
+        data = cur.fetchall()
+        if data:
+            rank = data[0][self.__DomainRank]
+            cur.execute('update WhiteList set DomainRank=%s,LastUpdate=%s where domain=%s',(rank + 1,datetime.datetime.now().strftime("%Y%m%d"),domain))
+            self.conn.commit()
+        else:
+            cur.execute('insert into WhiteList (Domain,DomainRank,LastUpdate) values (%s,%s,%s)',(domain,1,datetime.datetime.now().strftime("%Y%m%d")))
+            self.conn.commit()
+        cur.close()
+
+
 
     def saveData(self,data):
         pass
