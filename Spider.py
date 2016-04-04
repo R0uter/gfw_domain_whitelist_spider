@@ -16,7 +16,7 @@ class Spider:
 
     def __init__(self,ioMethod):
         self.__io = ioMethod
-        self.__reviewer = Reviewer.Reviewer(self.__io).startReviewer()
+
         self.__domainRex = re.compile(r'http(s)?://([\w\-\_]+\.[\w\.\-\_]+)[\/\*]*')
         self.__cnDomainRex = re.compile(r'\.cn(/)?$')
         self.__topDomainRex = re.compile(r'\w+\.\w+$')
@@ -26,14 +26,14 @@ class Spider:
         # self.__domainSeeds = self.__getSeeds()
 
     def __del__(self):
-        f = codecs.open('./domainlist.txt','w','utf-8')
+        f = codecs.open('./domainlistCache','w','utf-8')
         for domian in self.__domainList:
             f.write(domian + '\n')
         f.close()
 
     def __getLastTimeList(self):
         try:
-            f = codecs.open('./domainlist.txt', 'r','utf-8')
+            f = codecs.open('./domainlistCache', 'r','utf-8')
             for line in f.readlines():
                 line = line.strip('\n')
                 self.__domainList.append(line)
@@ -56,7 +56,7 @@ class Spider:
                 thread.start()
             for thread in threads:
                 thread.join()
-            print('Process next 10 pages...')
+            # print('Process next 10 pages...')
 
 
 
@@ -66,7 +66,7 @@ class Spider:
     def __nextPage(self):
         if len(self.__domainList) == 0:
             self.__domainList = self.__getSeeds()
-            print(self.__domainList)
+            # print(self.__domainList)
 
         self.__lock.acquire()
         url = self.__domainList.pop(0)
@@ -86,7 +86,7 @@ class Spider:
         try:
             m = self.__domainRex.findall(page)
         except:
-            print('Get wrong data! skip it!')
+            #print('Get wrong data! skip it!')
             return
 
         domainList = []
@@ -120,12 +120,16 @@ class Spider:
         )
         data = ''
         try:
-            data = http.request('GET', url, timeout=10).data
+            data = http.request('GET', url, timeout=10,
+                                headers={
+                                    'User-agent' : 'Mozilla/5.0 (Windows; U; Windows NT 5.1; de; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5'}
+                                ).data
+
             codeType = chardet.detect(data)
             data = data.decode(codeType['encoding'])
         except:
             pass
-            #print('Get url: '+url+' error! ----Maby page encoding detect wrong')
+            #print('Get url: '+url+' error! ----Maybe page encoding detect wrong')
         return data
 
     def __pingDomain(self,domain):
