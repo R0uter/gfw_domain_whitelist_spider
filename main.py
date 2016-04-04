@@ -6,6 +6,7 @@ import IO
 import os
 import atexit
 import signal
+import codecs
 
 
 def daemonize(pidfile, *, stdin='/dev/null',
@@ -78,6 +79,10 @@ def startSpider():
 def status():
     io = IO.IO()
     list = io.getList()
+    if os.path.exists(PIDFILE):
+        print('Spider is running.\n')
+    else:
+        print('Spider is not running.\n')
     print('Now we have '+str(len(list))+' whitelist item!\n',)
     print('Top 10 here:\n')
     i = 0
@@ -96,7 +101,7 @@ def help():
           'stop     stop spider\n'
           'restart  restart spider\n'
           'status   check list status\n'
-          'list     get whitelist\n'
+          'list     get whitelist top 10000\n'
           'help     show this page\n')
 
 def stop():
@@ -107,6 +112,20 @@ def stop():
     else:
         print('Not running', file=sys.stderr)
         raise SystemExit(1)
+
+def outPutList():
+    count = 10000
+    io = IO.IO()
+    list = io.getList()
+    f = codecs.open('./whitelist.txt','w','utf-8')
+    print('Output top 10000 domains in whitelist.txt\n', )
+    i = 0
+    for item in list:
+        i += 1
+        f.write(item[1]+'\n')
+        if i == 10000: break
+    print('done! got '+str(i)+' domains.')
+
 
 def main():
     if len(sys.argv) == 1:
@@ -124,7 +143,7 @@ def main():
         stop()
         startSpider()
     elif sys.argv[1] == 'list':
-        pass
+        outPutList()
     elif sys.argv[1] == 'help':
         help()
     else:

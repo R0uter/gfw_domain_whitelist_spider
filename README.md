@@ -13,6 +13,19 @@ You need install python packages blow:
     
     pip3.5 install urllib3,certifi,re,subprocess,shlex,codecs,chardet
     
+Then use command like this:
+    
+    main.py [start|stop|restart|status|list|help]
+
+    ------------------
+    
+    start    start spider
+    stop     stop spider
+    restart  restart spider
+    status   check list status
+    list     get whitelist top 10000
+    help     show this page
+    
 ###MySQL
 To use this spider, you need a SQL Server, and a database which has table like this:
 
