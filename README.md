@@ -11,7 +11,11 @@ This project uses python3
 ##Get start
 You need install python packages blow:
     
-    pip3.5 install urllib3,certifi,re,subprocess,shlex,codecs,chardet
+    urllib3,certifi,re,subprocess,shlex,codecs,chardet
+
+If you don not have pip3,you need install pip3 first, eg.ubuntu:
+
+    sudo apt-get install python3-pip
     
 Then use command like this:
     
