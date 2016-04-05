@@ -9,13 +9,29 @@ Finally we can generate GFW white domain list to use in pac file.
 This project uses python3
 
 ##Get start
+
+###packages
 You need install python packages blow:
     
-    urllib3,certifi,re,subprocess,shlex,codecs,chardet
+    urllib3,certifi,re,subprocess,shlex,codecs,chardet,dnspython3
 
 If you don not have pip3,you need install pip3 first, eg.ubuntu:
 
     sudo apt-get install python3-pip
+    
+###use
+
+Check spider function `python3 main.py status` if report like this:
+    
+    Spider is not running.
+    
+    Now we have 123 whitelist item!
+    
+    Top 10 here:
+    
+It means spider gos well, use `python3 main.py start` to start spider.
+
+###help
     
 Then use command like this:
     
@@ -30,6 +46,8 @@ Then use command like this:
     list     get whitelist top 10000
     help     show this page
     
+
+    
 ###MySQL
 To use this spider, you need a SQL Server, and a database which has table like this:
 
@@ -42,5 +60,3 @@ To use this spider, you need a SQL Server, and a database which has table like t
     )
 
 It can not work on Windows I think....
----
-And ... now I'm working on...
