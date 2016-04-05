@@ -93,7 +93,7 @@ def status():
 
 
 def help():
-    print('GFW domain whitelist spider v0.1 alpha 2\n'
+    print('GFW domain whitelist spider v0.1 alpha 3\n'
           'To start sprider you need edit sql server infomation first.\n\n'
           'main.py [start|stop|restart|status|list|help]\n\n'
           '------------------\n\n'

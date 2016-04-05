@@ -6,7 +6,7 @@ import shlex
 import codecs
 import chardet
 import threading
-
+import dns.resolver
 
 
 
@@ -22,6 +22,8 @@ class Spider:
         self.__topDomainRex = re.compile(r'\w+\.\w+$')
         self.__getLastTimeList()
         self.__lock = threading.Lock()
+        self.__resolver = dns.resolver.Resolver()
+        self.__resolver.nameservers = ['223.5.5.5','223.6.6.6']
 
         # self.__domainSeeds = self.__getSeeds()
 
@@ -56,6 +58,7 @@ class Spider:
                 thread.start()
             for thread in threads:
                 thread.join()
+
             # print('Process next 10 pages...')
 
 
@@ -133,7 +136,13 @@ class Spider:
         return data
 
     def __pingDomain(self,domain):
-        cmd = "ping -c 1 " + domain
+
+        a = self.__resolver.query(domain)
+
+        ip = str(a[0])
+
+
+        cmd = "ping -c 1 " + ip
         args = shlex.split(cmd)
 
         try:
