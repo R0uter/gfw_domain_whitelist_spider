@@ -29,7 +29,7 @@ Check spider function `python3 main.py status` if report like this:
     
     Top 10 here:
     
-It means spider gos well, use `python3 main.py start` to start spider.
+It means spider goes well, use `python3 main.py start` to start spider.
 
 ###help
     
