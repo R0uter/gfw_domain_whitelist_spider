@@ -24,10 +24,10 @@ class Spider:
         self.__lock = threading.Lock()
         self.__resolver = dns.resolver.Resolver()
         self.__resolver.nameservers = ['223.5.5.5','223.6.6.6']
-
+        
         # self.__domainSeeds = self.__getSeeds()
 
-    def __del__(self):
+    def __cache(self):
         f = codecs.open('./domainlistCache','w','utf-8')
         for domian in self.__domainList:
             f.write(domian + '\n')
@@ -51,8 +51,8 @@ class Spider:
         while True:
             threads = []
 
-
-            for thread in range(10):
+            self.__cache()
+            for thread in range(30):
                 threads.append(threading.Thread(target=self.__nextPage))
             for thread in threads:
                 thread.start()

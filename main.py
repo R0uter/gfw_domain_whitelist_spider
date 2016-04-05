@@ -74,6 +74,7 @@ def startSpider():
     io = IO.IO()
     spider = Spider.Spider(io)
     spider.start()
+
     print('WhiteList spider started!')
 
 def status():
