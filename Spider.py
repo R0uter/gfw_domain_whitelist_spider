@@ -28,7 +28,9 @@ class Spider:
         # self.__domainSeeds = self.__getSeeds()
 
     def __cache(self):
+
         f = codecs.open('./domainlistCache','w','utf-8')
+
         for domian in self.__domainList:
             f.write(domian + '\n')
         f.close()
@@ -48,11 +50,14 @@ class Spider:
     def start(self):
 
 
+        self.__domainList = self.__getSeeds()
+        # self.__cache()
+
         while True:
             threads = []
 
             self.__cache()
-            for thread in range(30):
+            for thread in range(20):
                 threads.append(threading.Thread(target=self.__nextPage))
             for thread in threads:
                 thread.start()

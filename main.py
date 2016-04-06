@@ -24,7 +24,7 @@ def daemonize(pidfile, *, stdin='/dev/null',
     except OSError as e:
         raise RuntimeError('fork #1 failed.')
 
-    os.chdir('/')
+    # os.chdir('/')
     os.umask(0)
     os.setsid()
     # Second fork (relinquish session leadership)
@@ -64,6 +64,7 @@ signal.signal(signal.SIGTERM, sigterm_handler)
 
 
 def startSpider():
+    print('WhiteList spider started!')
     try:
         daemonize(PIDFILE,
                   stdout='/tmp/daemon.log',
@@ -75,7 +76,7 @@ def startSpider():
     spider = Spider.Spider(io)
     spider.start()
 
-    print('WhiteList spider started!')
+
 
 def status():
     io = IO.IO()
