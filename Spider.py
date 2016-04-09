@@ -72,17 +72,16 @@ class Spider:
         return ['www.hao123.com']
 
     def __nextPage(self):
+        self.__lock.acquire()
         if len(self.__domainList) == 0:
             self.__domainList = self.__getSeeds()
             # print(self.__domainList)
-
-        self.__lock.acquire()
         url = self.__domainList.pop(0)
         self.__lock.release()
 
         if self.__pingDomain(url):
 
-            if self.__isWellKnowen(url) : return
+            if self.__isWellKnown(url) : return
             #skip this domain if wellknowen
             pageContent = self.__getPage(url)
             topDomain = self.__topDomainRex.findall(url)
@@ -119,7 +118,6 @@ class Spider:
             if m:
                 continue
             else:
-
                 domainList.append(domain)
 
         return domainList
@@ -169,8 +167,10 @@ class Spider:
                 result.append(item)
         return result
 
-    def __isWellKnowen(self,domain):
+    def __isWellKnown(self,domain):
         topDomain = self.__topDomainRex.findall(domain)
+        self.__lock.acquire()
         result = self.__io.getDomainRank(topDomain)
+        self.__lock.release()
         return result > 10000
 

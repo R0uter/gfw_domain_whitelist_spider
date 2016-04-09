@@ -7,6 +7,7 @@ import os
 import atexit
 import signal
 import codecs
+import re
 
 
 def daemonize(pidfile, *, stdin='/dev/null',
@@ -67,8 +68,8 @@ def startSpider():
     print('WhiteList spider started!')
     try:
         daemonize(PIDFILE,
-                  stdout='/tmp/daemon.log',
-                  stderr='/tmp/dameon.log')
+                  stdout='/tmp/spider-log.log',
+                  stderr='/tmp/spider-err.log')
     except RuntimeError as e:
         print(e, file=sys.stderr)
         raise SystemExit(1)
@@ -110,19 +111,20 @@ def stop():
     if os.path.exists(PIDFILE):
         with open(PIDFILE) as f:
             os.kill(int(f.read()), signal.SIGTERM)
-        print('WhiteList spider stopped!')
+        print('WhiteList spider stopped!', file=sys.stderr)
     else:
         print('Not running', file=sys.stderr)
         raise SystemExit(1)
 
 def outPutList():
-    count = 10000
+    # count = 10000
     io = IO.IO()
     list = io.getList()
     f = codecs.open('./whitelist.txt','w','utf-8')
     print('Output top 10000 domains in whitelist.txt\n', )
     i = 0
     for item in list:
+        if re.match(r'^\w{2}\.\w{2}/?\z',item): continue
         i += 1
         f.write(item[1]+'\n')
         if i == 10000: break
