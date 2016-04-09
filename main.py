@@ -124,7 +124,7 @@ def outPutList():
     print('Output top 10000 domains in whitelist.txt\n', )
     i = 0
     for item in list:
-        if re.match(r'^\w{2}\.\w{2}/?\z',item): continue
+        if re.match(r'^\w{2}\.\w{2}/?\z',item[1]): continue
         i += 1
         f.write(item[1]+'\n')
         if i == 10000: break
