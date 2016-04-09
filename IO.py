@@ -27,6 +27,17 @@ class IO:
         self.__updateDomain(domain)
 
 
+    def getDomainRank(self,domain):
+        cur = self.conn.cursor()
+        cur.execute('select * from WhiteList where Domain=%s', domain)
+        data = cur.fetchall()
+        cur.close()
+        if data:
+            rank = data[0][self.__DomainRank]
+            return rank
+        else:
+            return None
+
 
     def __updateDomain(self,domain):
         cur = self.conn.cursor()

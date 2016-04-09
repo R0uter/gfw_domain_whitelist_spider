@@ -64,7 +64,7 @@ class Spider:
             for thread in threads:
                 thread.join()
 
-            # print('Process next 10 pages...')
+            # print('Process next N pages...')
 
 
 
@@ -81,6 +81,9 @@ class Spider:
         self.__lock.release()
 
         if self.__pingDomain(url):
+
+            if self.__isWellKnowen(url) : return
+            #skip this domain if wellknowen
             pageContent = self.__getPage(url)
             topDomain = self.__topDomainRex.findall(url)
             self.__lock.acquire()
@@ -89,7 +92,7 @@ class Spider:
             self.__gatherDomainFromPage(pageContent)
 
     def __gatherDomainFromPage(self,page):
-        if len(self.__domainList) > 5000:
+        if len(self.__domainList) > 10000:
             return
         try:
             m = self.__domainRex.findall(page)
@@ -166,4 +169,8 @@ class Spider:
                 result.append(item)
         return result
 
+    def __isWellKnowen(self,domain):
+        topDomain = self.__topDomainRex.findall(domain)
+        result = self.__io.getDomainRank(topDomain)
+        return result > 10000
 
