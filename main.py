@@ -8,6 +8,7 @@ import atexit
 import signal
 import codecs
 import re
+import TLDS
 
 
 def daemonize(pidfile, *, stdin='/dev/null',
@@ -118,17 +119,26 @@ def stop():
 
 def outPutList():
     # count = 10000
+    cctlds = TLDS.getCCTLDS()
+    tlds = TLDS.getTLDS()
     io = IO.IO()
     list = io.getList()
     f = codecs.open('./whitelist.txt','w','utf-8')
     print('Output top 10000 domains in whitelist.txt\n', )
     i = 0
+    skip = 0
     for item in list:
-        if re.match(r'^\w{2}\.\w{2}/?\z',item[1]): continue
+        d = re.findall(r'.\w{2}/?\z',item[1])
+        if d:
+            if cctlds.__contains__(d):
+                t = re.findall(r'^\w+',item[1])
+                if tlds.__contains__(t):
+                    skip += 1
+                    continue
         i += 1
         f.write(item[1]+'\n')
         if i == 10000: break
-    print('done! got '+str(i)+' domains.')
+    print('done! got '+str(i)+' domains.\n and skip '+str(skip)+' error domain.\n')
 
 
 def main():

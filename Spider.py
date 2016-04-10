@@ -172,5 +172,5 @@ class Spider:
         self.__lock.acquire()
         result = self.__io.getDomainRank(topDomain)
         self.__lock.release()
-        return result > 10000
+        return result > 5000
 
