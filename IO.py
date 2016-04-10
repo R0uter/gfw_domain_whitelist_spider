@@ -34,7 +34,7 @@ class IO:
         cur.close()
         if data:
             rank = data[0][self.__DomainRank]
-            return rank
+            return int(rank)
         else:
             return None
 

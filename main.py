@@ -127,12 +127,14 @@ def outPutList():
     print('Output top 10000 domains in whitelist.txt\n', )
     i = 0
     skip = 0
+    #its ugly ... but worked!
+    #fk country code top-level domain!!!!
     for item in list:
-        d = re.findall(r'.\w{2}/?\z',item[1])
+        d = re.findall(r'.\w{2}$',item[1])
         if d:
-            if cctlds.__contains__(d):
+            if cctlds.__contains__(d[0]):
                 t = re.findall(r'^\w+',item[1])
-                if tlds.__contains__(t):
+                if tlds.__contains__(t[0]):
                     skip += 1
                     continue
         i += 1
