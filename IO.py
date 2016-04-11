@@ -36,7 +36,7 @@ class IO:
             rank = data[0][self.__DomainRank]
             return int(rank)
         else:
-            return None
+            return 0
 
 
     def __updateDomain(self,domain):
@@ -53,9 +53,6 @@ class IO:
         cur.close()
 
 
-
-    def saveData(self,data):
-        pass
     def getList (self):
         cur = self.conn.cursor()
         cur.execute('select * from WhiteList order by DomainRank desc')
@@ -63,8 +60,7 @@ class IO:
         cur.close()
         return data
 
-    def getDomainWithNumber(self,number):
-        pass
+
 
 
 

@@ -66,7 +66,7 @@ signal.signal(signal.SIGTERM, sigterm_handler)
 
 
 def startSpider():
-    print('WhiteList spider started!')
+    print('WhiteList spider started!', file=sys.stderr)
     try:
         daemonize(PIDFILE,
                   stdout='/tmp/spider-log.log',
@@ -74,6 +74,7 @@ def startSpider():
     except RuntimeError as e:
         print(e, file=sys.stderr)
         raise SystemExit(1)
+
     io = IO.IO()
     spider = Spider.Spider(io)
     spider.start()
@@ -84,20 +85,20 @@ def status():
     io = IO.IO()
     list = io.getList()
     if os.path.exists(PIDFILE):
-        print('Spider is running.\n')
+        print('Spider is running.\n', file=sys.stderr)
     else:
-        print('Spider is not running.\n')
+        print('Spider is not running.\n', file=sys.stderr)
     print('Now we have '+str(len(list))+' whitelist item!\n',)
-    print('Top 10 here:\n')
+    print('Top 20 here:\n')
     i = 0
     for row in list:
         i += 1
-        print(row[1]+', count: '+str(row[0]))
-        if i > 9: break
+        print(str(i)+'-\t'+row[1]+'| \tcount: '+str(row[0])+', last update: '+str(row[2]))
+        if i > 19: break
 
 
 def help():
-    print('GFW domain whitelist spider v0.1 alpha 3\n'
+    print('GFW domain whitelist spider v0.1 alpha 5\n'
           'To start sprider you need edit sql server infomation first.\n\n'
           'main.py [start|stop|restart|status|list|help]\n\n'
           '------------------\n\n'
@@ -112,6 +113,7 @@ def stop():
     if os.path.exists(PIDFILE):
         with open(PIDFILE) as f:
             os.kill(int(f.read()), signal.SIGTERM)
+
         print('WhiteList spider stopped!', file=sys.stderr)
     else:
         print('Not running', file=sys.stderr)
@@ -155,6 +157,7 @@ def main():
 
     elif sys.argv[1] == 'stop':
         stop()
+
     elif sys.argv[1] == 'restart':
         stop()
         startSpider()

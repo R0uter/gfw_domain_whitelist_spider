@@ -7,6 +7,7 @@ import codecs
 import chardet
 import threading
 import dns.resolver
+import isChinaIP
 
 
 
@@ -24,6 +25,7 @@ class Spider:
         self.__lock = threading.Lock()
         self.__resolver = dns.resolver.Resolver()
         self.__resolver.nameservers = ['223.5.5.5','223.6.6.6']
+        self.__chinaIP = isChinaIP.ChinaIP()
         
         # self.__domainSeeds = self.__getSeeds()
 
@@ -138,24 +140,32 @@ class Spider:
             data = data.decode(codeType['encoding'])
         except:
             pass
-            #print('Get url: '+url+' error! ----Maybe page encoding detect wrong')
+
         return data
 
     def __pingDomain(self,domain):
-
-        a = self.__resolver.query(domain)
-
-        ip = str(a[0])
-
-
-        cmd = "ping -c 1 " + ip
-        args = shlex.split(cmd)
-
+        a = []
+        isAvailable = True
         try:
-            subprocess.check_call(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            return True
-        except subprocess.CalledProcessError:
-            return False
+            a = self.__resolver.query(domain)
+        except:
+            isAvailable = False
+        if len(a) == 0:return False
+        ip = str(a[0])
+        if self.__chinaIP.isChinaIP(ip):
+
+            cmd = "ping -c 1 " + ip
+            args = shlex.split(cmd)
+
+            try:
+                subprocess.check_call(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+            except subprocess.CalledProcessError:
+                isAvailable = False
+        else:
+            isAvailable = False
+
+        return isAvailable
 
 
     def __deDuplicate(self,list):
@@ -172,5 +182,5 @@ class Spider:
         self.__lock.acquire()
         result = self.__io.getDomainRank(topDomain)
         self.__lock.release()
-        return result > 5000
+        return result > 2000
 

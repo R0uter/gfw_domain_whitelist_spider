@@ -1,7 +1,7 @@
-##Spider for GFW white domain list
+##Spider for GFW white domain list (v0.1 alpha 5)
 This is a simple spider for the GFW white domain list that I wroted.
 
-It will automatically gather domian accessable infomation from Internet and save them into database.
+It will automatically gather domian  infomation from Chinternet and save them into database.
 
 Finally we can generate GFW white domain list to use in pac file.
 
@@ -25,7 +25,7 @@ Check spider function `python3 main.py status` if report like this:
     
     Spider is not running.
     
-    Now we have 123 whitelist item!
+    Now we have 0 whitelist item!
     
     Top 10 here:
     
