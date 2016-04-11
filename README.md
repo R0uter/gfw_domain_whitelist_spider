@@ -49,7 +49,7 @@ Then use command like this:
 
     
 ###MySQL
-To use this spider, you need a SQL Server, and a database which has table like this:
+To use this spider, you need MySQL Server, and a database which has table like this:
 
     CREATE TABLE WhiteList
     (
