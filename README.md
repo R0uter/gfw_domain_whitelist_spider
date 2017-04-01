@@ -1,16 +1,16 @@
-##Spider for GFW white domain list (v0.1 alpha 5)
+## Spider for GFW white domain list (v0.1 alpha 5)
 This is a simple spider for the GFW white domain list that I wroted.
 
 It will automatically gather domian  infomation from Chinternet and save them into database.
 
 Finally we can generate GFW white domain list to use in pac file.
 
-###Python
+### Python
 This project uses python3
 
-##Get start
+## Get start
 
-###packages
+### packages
 You need install python packages blow:
     
     urllib3,certifi,re,subprocess,shlex,codecs,chardet,dnspython3
@@ -19,7 +19,7 @@ If you don not have pip3,you need install pip3 first, eg.ubuntu:
 
     sudo apt-get install python3-pip
     
-###use
+### use
 
 Check spider function `python3 main.py status` if report like this:
     
@@ -31,7 +31,7 @@ Check spider function `python3 main.py status` if report like this:
     
 It means spider goes well, use `python3 main.py start` to start spider.
 
-###help
+### help
     
 Then use command like this:
     
@@ -48,7 +48,7 @@ Then use command like this:
     
 
     
-###MySQL
+### MySQL
 To use this spider, you need MySQL Server, and a database which has table like this:
 
     CREATE TABLE WhiteList
